@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculadora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .calculadora {
+            width: 400px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <div class="calculadora">
+            <div class="row">
+                <div class="col-12">
+                    <input type="text" id="visor" class="form-control text-end" readonly placeholder="0">
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-3">
+                    <button class="btn btn-secondary w-100 m-2" onclick="atualizaDisplay('7')">7</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-secondary w-100 m-2" onclick="atualizaDisplay('8')">8</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-secondary w-100 m-2" onclick="atualizaDisplay('9')">9</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-dark w-100 m-2" onclick="operacao('multiply')">×</button>
+                </div>  
+                <div class="col-3">
+                    <button class="btn btn-secondary w-100 m-2" onclick="atualizaDisplay('4')">4</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-secondary w-100 m-2" onclick="atualizaDisplay('5')">5</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-secondary w-100 m-2" onclick="atualizaDisplay('6')">6</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-dark w-100 m-2" onclick="operacao('subtract')">−</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-secondary w-100 m-2" onclick="atualizaDisplay('1')">1</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-secondary w-100 m-2" onclick="atualizaDisplay('2')">2</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-secondary w-100 m-2" onclick="atualizaDisplay('3')">3</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-dark w-100 m-2" onclick="operacao('add')">+</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-danger w-100 m-2" onclick="limparVisor()">C</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-secondary w-100 m-2" onclick="atualizaDisplay('0')">0</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-dark w-100 m-2" onclick="atualizaDisplay('.')">.</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-dark w-100 m-2" onclick="operacao('divide')">÷</button>    
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-primary w-100 m-2" onclick="calcularResultado()">=</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let valorAtual = '';
+        let valorAnterior = '';
+        let operador = null;
+
+        function atualizaDisplay(valor) {
+            const visor = document.getElementById("visor");
+
+            if (valor === '.' && valorAtual.includes('.')) return;
+
+            valorAtual += valor;
+            visor.value = valorAtual;
+        }
+
+        function operacao(op) {
+            if (valorAtual === '') return;
+            operador = op;
+            valorAnterior = valorAtual;
+            valorAtual = '';
+        }
+
+        function calcularResultado() {
+            const visor = document.getElementById("visor");
+            const num1 = parseFloat(valorAnterior);
+            const num2 = parseFloat(valorAtual);
+
+            if (isNaN(num1) || isNaN(num2)) return;
+
+            let resultado;
+            switch (operador) {
+                case 'add':
+                    resultado = num1 + num2;
+                    break;
+                case 'subtract':
+                    resultado = num1 - num2;
+                    break;
+                case 'multiply':
+                    resultado = num1 * num2;
+                    break;
+                case 'divide':
+                    if (num2 === 0) {
+                        visor.value = 'Erro: Divisão por zero';
+                        limparVisor();
+                        return;
+                    }
+                    resultado = num1 / num2;
+                    break;
+                default:
+                    return;
+            }
+
+            visor.value = resultado;
+            valorAtual = resultado.toString();
+            valorAnterior = '';
+            operador = null;
+        }
+        function limparVisor() {
+            valorAtual = '';
+            valorAnterior = '';
+            operador = null;
+            document.getElementById("visor").value = '0';
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>
